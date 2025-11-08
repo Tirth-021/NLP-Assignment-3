@@ -46,3 +46,21 @@ nav a.cta{background:linear-gradient(90deg,var(--accent),var(--accent-2));paddin
   .grid.two-up{grid-template-columns:1fr}
   .container{padding:16px}
 }
+.image-container {
+  overflow-x: auto;
+  padding: 10px;
+  background: #0d1117; /* match your dark theme */
+  border-radius: 10px;
+  text-align: center;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+  cursor: zoom-in;  /* indicates click-to-enlarge */
+  transition: transform 0.3s ease;
+}
+
+.image-container img:hover {
+  transform: scale(1.02); /* slight hover zoom */
+}
