@@ -3,79 +3,130 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Toxicity Steering — Demo</title>
+  <title>Toxicity Steering — Project Overview</title>
   <link rel="stylesheet" href="styles.css" />
-  <!-- Optional: load a readable web font -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta name="author" content="Tirth" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="container">
-      <h1>Toxicity Steering — Live Demo</h1>
-      <p class="muted">Compare Base model vs Steered model outputs and adjust <strong>α</strong> (steering strength).</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Toxicity Steering</h1>
+      <nav>
+        <a href="#pipeline">Pipeline</a>
+        <a href="#results">Results</a>
+        <a href="#ablation">Ablation</a>
+        <a href="#metrics">Metrics</a>
+        <a href="#demo" class="cta">Live demo</a>
+      </nav>
     </div>
   </header>
 
   <main class="container">
-    <section class="controls">
-      <label for="prompt">Prompt</label>
-      <textarea id="prompt" placeholder="Enter a prompt to test (e.g., 'Describe people from X group')" rows="5"></textarea>
-
-      <div class="row">
-        <div class="col">
-          <label for="alpha">Alpha (steering strength): <span id="alpha-value">1.2</span></label>
-          <input id="alpha" type="range" min="0" max="2.0" step="0.05" value="1.2" />
-        </div>
-
-        <div class="col">
-          <label for="model-select">Steered source</label>
-          <select id="model-select">
-            <option value="api">Use Steered API endpoints</option>
-            <option value="embed">Embed Gradio / Space (if configured)</option>
-          </select>
-        </div>
+    <section id="hero" class="hero">
+      <div class="hero-left">
+        <h2>Model steering via sparse autoencoders & directional latent steering</h2>
+        <p>We collected head-wise activations, trained per-head sparse autoencoders (SAEs), computed a toxicity direction in latent space, and steered V (attention value) during generation. This repo contains the pipeline, results, and an interactive demo (Gradio).</p>
+        <p class="meta">Model: <strong>microsoft/Phi-3.5-mini-instruct</strong> · Dataset: <strong>RTP-LX (English/Hindi)</strong> · GPU: <strong>L40S</strong></p>
+        <p class="repo">Repo: <a href="https://github.com/Tirth-021/NLP-Assignment-2" target="_blank" rel="noopener">github.com/Tirth-021/NLP-Assignment-2</a></p>
       </div>
-
-      <div class="actions">
-        <button id="generate-btn" class="btn primary">Generate (both)</button>
-        <button id="copy-prompt" class="btn">Copy Prompt</button>
-        <span id="status" class="status">Ready</span>
-      </div>
-    </section>
-
-    <section class="outputs">
-      <div class="col-output">
-        <h3>Base Model</h3>
-        <div class="meta">Endpoint: <code id="base-endpoint">—</code></div>
-        <pre id="base-output" class="output">No output yet.</pre>
-        <div class="output-actions">
-          <button class="btn small" id="copy-base">Copy</button>
-        </div>
-      </div>
-
-      <div class="col-output">
-        <h3>Steered Model</h3>
-        <div class="meta">Endpoint / Embed: <code id="steered-endpoint">—</code></div>
-        <pre id="steered-output" class="output">No output yet.</pre>
-        <div class="output-actions">
-          <button class="btn small" id="copy-steered">Copy</button>
+      <div class="hero-right">
+        <!-- Pipeline SVG embed -->
+        <div class="card">
+          <h3>Pipeline</h3>
+          <div class="svg-wrap">
+            <!-- Inline SVG (vector) - replace pipeline.svg if you want -->
+            <object type="image/svg+xml" data="assets/pipeline.svg" class="pipeline-svg" aria-label="Pipeline diagram">Pipeline</object>
+          </div>
+          <p class="small">Collect → Train SAE → Compute direction → Steer V during inference</p>
         </div>
       </div>
     </section>
 
-    <section id="embed-area" class="embed-area hidden">
-      <h3>Embedded Steered App</h3>
-      <div id="embed-wrapper"></div>
+    <section id="results" class="section">
+      <h2>Key Results</h2>
+      <p>Summary: SAE steering (d_latent=8, α=1.2) achieved ~30% overall reduction in average toxicity vs base model. Results below show per-method and per-language breakdowns.</p>
+
+      <div class="grid two-up">
+        <div class="card">
+          <h3>SAE Results</h3>
+          <img src="assets/images/sae_results.png" alt="SAE results: overall and per-language" />
+          <p class="caption">Figure 1: Overall toxicity and per-language reduction (replace with your image).</p>
+        </div>
+
+        <div class="card">
+          <h3>Neuron Tuning Results</h3>
+          <img src="assets/images/neuron_tuning_results.png" alt="Neuron tuning results" />
+          <p class="caption">Figure 2: Attention / MLP / Down-proj comparative results.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Numbers (selected)</h3>
+        <table class="table">
+          <thead><tr><th>Method</th><th>Base tox</th><th>Mitigated tox</th><th>Reduction</th><th>%</th></tr></thead>
+          <tbody>
+            <tr><td>SAE (d_latent=16, α=0.8)</td><td>0.1726</td><td>0.1617</td><td>0.0109</td><td>6.3%</td></tr>
+            <tr><td>SAE (d_latent=8, α=1.2)</td><td>0.1826</td><td>0.1276</td><td>0.0550</td><td>30.1%</td></tr>
+            <tr><td>NeuronTune (Attentions)</td><td>0.1798</td><td>0.1468</td><td>0.0330</td><td>18.4%</td></tr>
+          </tbody>
+        </table>
+        <p class="small">Full CSV results available in the repo under <code>results/</code>.</p>
+      </div>
     </section>
 
-    <footer class="footer">
-      <div class="container">
-        <small>Repo / Demo: <a href="https://github.com/Tirth-021/NLP-Assignment-2" target="_blank" rel="noopener">github.com/Tirth-021/NLP-Assignment-2</a></small>
+    <section id="ablation" class="section">
+      <h2>Ablation & Methods</h2>
+      <p>We experimented with different modules to steer (attn qkv, attn o, MLP down_proj) and with different SAE latent sizes. Key observation: steering value vectors across multiple mid-to-late layers gave the best tradeoff between refusal (safety) and utility.</p>
+
+      <div class="card">
+        <h3>Selected Ablation Table</h3>
+        <table class="table">
+          <thead><tr><th>Method</th><th>Base</th><th>Mitigated</th><th>Reduction</th><th>High tox rate</th></tr></thead>
+          <tbody>
+            <tr><td>Attentions</td><td>0.1798</td><td>0.1468</td><td>0.0330</td><td>0.084</td></tr>
+            <tr><td>Attn+MLP</td><td>0.1806</td><td>0.1693</td><td>0.0112</td><td>0.087</td></tr>
+            <tr><td>MLPs</td><td>0.1770</td><td>0.1798</td><td>-0.0027</td><td>0.123</td></tr>
+            <tr><td>Down_Proj</td><td>0.1817</td><td>0.1749</td><td>0.0068</td><td>0.122</td></tr>
+          </tbody>
+        </table>
       </div>
-    </footer>
+    </section>
+
+    <section id="metrics" class="section">
+      <h2>Metrics & Tools</h2>
+      <p>Primary metric: <strong>Perspective API toxicity</strong> (used throughout). We also experimented with <strong>Detoxify</strong> as a secondary scoring library for additional signal (see metrics table below).</p>
+
+      <div class="card">
+        <h3>Metrics tried</h3>
+        <ul>
+          <li>Perspective API: overall toxicity, severe_toxicity, identity_attack, insult, profanity, threat</li>
+          <li>Detoxify: aggregated toxicity categories and model confidence (used as crosscheck)</li>
+          <li>High-toxicity rate (>0.5) and median toxicity per language</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="demo" class="section">
+      <h2>Demo & How to run</h2>
+      <p>Use the interactive Gradio demo for live generation. You can toggle <strong>α</strong> (steering strength) to compare Base vs Steered outputs side-by-side.</p>
+      <p><a class="cta big" href="https://huggingface.co/spaces/Tirth2109/toxicity-steering" target="_blank" rel="noopener">Open Gradio Demo</a></p>
+      <p class="small">If your demo is in a different URL replace link in <code>index.html</code>.</p>
+    </section>
+
+    <section id="appendix" class="section small">
+      <h2>Appendix & Files</h2>
+      <ul>
+        <li>Place plot images in <code>assets/images/</code> (names: <code>sae_results.png</code>, <code>neuron_tuning_results.png</code>).</li>
+        <li>Pipeline SVG is at <code>assets/pipeline.svg</code>. Replace with your custom diagram if needed.</li>
+        <li>Detailed CSV results can be uploaded to repo as <code>assets/results.csv</code> and linked from here.</li>
+      </ul>
+    </section>
   </main>
 
-  <script src="config.js"></script>
-  <script src="app.js"></script>
+  <footer class="site-footer">
+    <div class="container">
+      <p>© Toxicity Steering — Private project. Repo: <a href="https://github.com/Tirth-021/NLP-Assignment-2" target="_blank" rel="noopener">github.com/Tirth-021/NLP-Assignment-2</a></p>
+    </div>
+  </footer>
 </body>
 </html>
