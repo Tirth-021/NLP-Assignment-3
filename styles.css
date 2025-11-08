@@ -74,50 +74,54 @@ svg text {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  margin-top: 28px;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  padding-bottom: 10px;
+  gap: 18px;               /* smaller spacing */
+  margin-top: 22px;
+  flex-wrap: nowrap;       /* keep on one line */
+  overflow: hidden;        /* remove scrollbar entirely */
 }
 
 .pipeline-step {
-  padding: 14px 26px;
+  padding: 12px 22px;
   border-radius: 10px;
-  background: #202836;
-  border: 2px solid #3f4a63;
+  background: #1f2633;
+  border: 2px solid #39475b;
   color: #dbe6ff;
   font-weight: 600;
-  font-size: 1.05rem;
-  transition: 0.4s ease;
+  font-size: 1rem;
+  transition: 0.35s;
   opacity: 0.45;
+  white-space: nowrap;      /* prevents text breaking */
 }
 
 .pipeline-step.active {
   border-color: #58a6ff;
-  background: #27344a;
+  background: #273449;
   color: white;
   opacity: 1;
-  transform: scale(1.08);
-  box-shadow: 0 0 16px rgba(88, 166, 255, 0.55);
+  transform: scale(1.06);
+  box-shadow: 0 0 14px rgba(88, 166, 255, 0.55);
 }
 
 .pipeline-arrow {
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: #6c7a95;
-  transition: 0.4s;
+  transition: 0.35s;
   opacity: 0.4;
 }
 
 .pipeline-arrow.active {
   color: #58a6ff;
   opacity: 1;
-  text-shadow: 0 0 12px rgba(88, 166, 255, 0.7);
+  text-shadow: 0 0 10px rgba(88, 166, 255, 0.6);
 }
 
 .pipeline-caption {
-  margin-top: 16px;
+  margin-top: 14px;
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   opacity: 0.75;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
 }
+
