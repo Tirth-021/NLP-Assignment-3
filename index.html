@@ -31,16 +31,26 @@
       </div>
       <div class="hero-right">
         <!-- Pipeline SVG embed -->
-        <div class="image-container">
-        <div class="card">
-          <h3>Pipeline</h3>
-          <div class="svg-wrap">
-            <!-- Inline SVG (vector) - replace pipeline.svg if you want -->
-            <object type="image/svg+xml" data="assets/pipeline.svg" class="pipeline-svg" aria-label="Pipeline diagram">Pipeline</object>
-          </div>
-          <p class="small">Collect → Train SAE → Compute direction → Steer V during inference</p>
-        </div>
-          </div>
+        <section id="pipeline" class="section">
+  <h2>Pipeline</h2>
+
+  <div class="pipeline-wrapper">
+    <div class="pipeline-step" data-step="1">Collect Activations</div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step" data-step="2">Train SAE</div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step" data-step="3">Compute Direction</div>
+    <div class="pipeline-arrow">→</div>
+    <div class="pipeline-step" data-step="4">Steer During Inference</div>
+  </div>
+
+  <p class="pipeline-caption">
+    The model learns a sparse latent representation per head.  
+    The mean latent direction between harmful and safe activations defines a safety vector,
+    which is then subtracted during inference.
+  </p>
+</section>
+
       </div>
     </section>
 
