@@ -69,3 +69,51 @@ svg text {
   fill: #ffffff !important; /* Make text white */
   font-weight: 500;
 }
+
+.pipeline-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pipeline-step {
+  padding: 14px 22px;
+  border-radius: 10px;
+  background: #1d2333;
+  border: 2px solid #3b445b;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #dce6ff;
+  transition: 0.4s;
+  opacity: 0.4;
+}
+
+.pipeline-step.active {
+  border-color: #4da6ff;
+  background: #24324d;
+  color: #ffffff;
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 0 12px rgba(77,166,255,0.6);
+}
+
+.pipeline-arrow {
+  font-size: 2rem;
+  color: #ffffff88;
+  transition: 0.4s;
+}
+
+.pipeline-arrow.active {
+  color: #4da6ff;
+  text-shadow: 0 0 12px rgba(77,166,255,0.6);
+}
+
+.pipeline-caption {
+  margin-top: 14px;
+  text-align: center;
+  opacity: 0.8;
+  font-size: 0.95rem;
+}
