@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420">
+  <style>
+    .t{font-family:Inter,Arial;font-size:14px;fill:#e6eef3}
+    .h{font-family:Inter,Arial;font-size:16px;fill:#041018;font-weight:700}
+    .box{fill:#0f1720;stroke:#173040;stroke-width:1.5;rx:10}
+    .arrow{stroke:#6ee7b7;stroke-width:2;fill:none;marker-end:url(#arr)}
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6ee7b7"></path>
+    </marker>
+  </defs>
+
+  <!-- Boxes -->
+  <rect x="30" y="40" width="240" height="90" class="box"></rect>
+  <text x="150" y="70" text-anchor="middle" class="h">Activation Collection</text>
+  <text x="150" y="92" text-anchor="middle" class="t">collect L×H head value activations</text>
+
+  <rect x="320" y="40" width="240" height="90" class="box"></rect>
+  <text x="440" y="70" text-anchor="middle" class="h">Per-head SAE</text>
+  <text x="440" y="92" text-anchor="middle" class="t">train sparse encoder → latent z</text>
+
+  <rect x="610" y="40" width="260" height="90" class="box"></rect>
+  <text x="740" y="64" text-anchor="middle" class="h">Direction Estimation</text>
+  <text x="740" y="92" text-anchor="middle" class="t">mean(z_harm) - mean(z_safe) → direction</text>
+
+  <rect x="920" y="40" width="240" height="90" class="box"></rect>
+  <text x="1040" y="64" text-anchor="middle" class="h">Steering During Inference</text>
+  <text x="1040" y="92" text-anchor="middle" class="t">project-out or subtract along direction</text>
+
+  <!-- Arrows -->
+  <path d="M270,85 L320,85" class="arrow"></path>
+  <path d="M560,85 L610,85" class="arrow"></path>
+  <path d="M870,85 L920,85" class="arrow"></path>
+
+  <!-- Notes -->
+  <text x="150" y="160" class="t" text-anchor="middle">Head-wise activations → lower-dim latent (sparse)</text>
+  <text x="740" y="160" class="t" text-anchor="middle">Normalized direction in latent space per head</text>
+</svg>
