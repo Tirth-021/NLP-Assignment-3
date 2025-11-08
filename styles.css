@@ -64,3 +64,8 @@ nav a.cta{background:linear-gradient(90deg,var(--accent),var(--accent-2));paddin
 .image-container img:hover {
   transform: scale(1.02); /* slight hover zoom */
 }
+
+svg text {
+  fill: #ffffff !important; /* Make text white */
+  font-weight: 500;
+}
