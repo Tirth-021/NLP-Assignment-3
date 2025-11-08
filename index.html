@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Toxicity Steering — Demo</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Optional: load a readable web font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <h1>Toxicity Steering — Live Demo</h1>
+      <p class="muted">Compare Base model vs Steered model outputs and adjust <strong>α</strong> (steering strength).</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <label for="prompt">Prompt</label>
+      <textarea id="prompt" placeholder="Enter a prompt to test (e.g., 'Describe people from X group')" rows="5"></textarea>
+
+      <div class="row">
+        <div class="col">
+          <label for="alpha">Alpha (steering strength): <span id="alpha-value">1.2</span></label>
+          <input id="alpha" type="range" min="0" max="2.0" step="0.05" value="1.2" />
+        </div>
+
+        <div class="col">
+          <label for="model-select">Steered source</label>
+          <select id="model-select">
+            <option value="api">Use Steered API endpoints</option>
+            <option value="embed">Embed Gradio / Space (if configured)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="generate-btn" class="btn primary">Generate (both)</button>
+        <button id="copy-prompt" class="btn">Copy Prompt</button>
+        <span id="status" class="status">Ready</span>
+      </div>
+    </section>
+
+    <section class="outputs">
+      <div class="col-output">
+        <h3>Base Model</h3>
+        <div class="meta">Endpoint: <code id="base-endpoint">—</code></div>
+        <pre id="base-output" class="output">No output yet.</pre>
+        <div class="output-actions">
+          <button class="btn small" id="copy-base">Copy</button>
+        </div>
+      </div>
+
+      <div class="col-output">
+        <h3>Steered Model</h3>
+        <div class="meta">Endpoint / Embed: <code id="steered-endpoint">—</code></div>
+        <pre id="steered-output" class="output">No output yet.</pre>
+        <div class="output-actions">
+          <button class="btn small" id="copy-steered">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="embed-area" class="embed-area hidden">
+      <h3>Embedded Steered App</h3>
+      <div id="embed-wrapper"></div>
+    </section>
+
+    <footer class="footer">
+      <div class="container">
+        <small>Repo / Demo: <a href="https://github.com/Tirth-021/NLP-Assignment-2" target="_blank" rel="noopener">github.com/Tirth-021/NLP-Assignment-2</a></small>
+      </div>
+    </footer>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
