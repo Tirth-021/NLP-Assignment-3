@@ -35,13 +35,13 @@
   <h2>Pipeline</h2>
 
   <div class="pipeline-row">
-    <div class="pipeline-step" data-step="1">Collect Activations</div>
+    <div class="pipeline-step" data-step="1" data-info="We record per-head Value (V) activations from selected layers when model processes safe and harmful text.">Collect Activations</div>
     <div class="pipeline-arrow">→</div>
-    <div class="pipeline-step" data-step="2">Train SAE</div>
+    <div class="pipeline-step" data-step="2" data-info="We train a Sparse Autoencoder per head to compress activations into a lower-dimensional, interpretable latent space.">Train SAE</div>
     <div class="pipeline-arrow">→</div>
-    <div class="pipeline-step" data-step="3">Compute Direction</div>
+    <div class="pipeline-step" data-step="3" data-info="We compute mean latent activation for safe vs harmful samples. Their difference defines the direction of toxicity.">Compute Direction</div>
     <div class="pipeline-arrow">→</div>
-    <div class="pipeline-step" data-step="4">Steer During Inference</div>
+    <div class="pipeline-step" data-step="4" data-info="During inference, we subtract α × direction in latent space to reduce harmful drift.">Steer During Inference</div>
   </div>
 
   <p class="pipeline-caption">
@@ -51,6 +51,7 @@
 
 
       </div>
+      <div id="pipeline-tooltip"></div>
     </section>
 
     <section id="results" class="section">
@@ -126,7 +127,7 @@
       <h2>Demo & How to run</h2>
       <p>Use the interactive Gradio demo for live generation. You can toggle <strong>α</strong> (steering strength) to compare Base vs Steered outputs side-by-side.</p>
       <p><a class="cta big" href="https://huggingface.co/spaces/Tirth2109/toxicity-steering" target="_blank" rel="noopener">Open Gradio Demo</a></p>
-      <p class="small">If your demo is in a different URL replace link in <code>index.html</code>.</p>
+      <!-- <p class="small">If your demo is in a different URL replace link in <code>index.html</code>.</p> -->
     </section>
 
     <!-- <section id="appendix" class="section small">
