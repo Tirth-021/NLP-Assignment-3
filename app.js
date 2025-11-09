@@ -18,3 +18,25 @@ document.addEventListener("DOMContentLoaded", () => {
   animatePipeline();
   setInterval(animatePipeline, 1300);
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+  const steps = document.querySelectorAll(".pipeline-step");
+  const tooltip = document.getElementById("pipeline-tooltip");
+
+  steps.forEach(step => {
+    step.addEventListener("mouseenter", e => {
+      const text = step.getAttribute("data-info");
+      tooltip.textContent = text;
+      tooltip.style.opacity = "1";
+    });
+
+    step.addEventListener("mousemove", e => {
+      tooltip.style.left = `${e.pageX}px`;
+      tooltip.style.top = `${e.pageY - 20}px`;
+    });
+
+    step.addEventListener("mouseleave", () => {
+      tooltip.style.opacity = "0";
+    });
+  });
+});
