@@ -131,7 +131,6 @@ svg text {
   margin-right: auto;
 }
 
-/* ✅ Mobile optimisation */
 @media (max-width: 850px) {
   .pipeline-step {
     font-size: 0.85rem;
@@ -140,5 +139,28 @@ svg text {
   .pipeline-arrow {
     font-size: 1.1rem;
   }
+}
+
+#pipeline-tooltip {
+  position: fixed;
+  padding: 10px 14px;
+  background: rgba(25, 32, 45, 0.95);
+  border: 1px solid #4c5970;
+  border-radius: 8px;
+  color: #dbe6ff;
+  font-size: 0.85rem;
+  max-width: 260px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -140%);
+  transition: opacity 0.25s ease;
+  z-index: 1000;
+}
+
+/* Highlight step when hovered */
+.pipeline-step:hover {
+  border-color: #4ea4ff;
+  background: #293547;
+  color: #ffffff;
 }
 
