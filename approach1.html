@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Approach 1 — SAE Steering</title>
+  <link rel="stylesheet" href="styles.css" />
+  <meta name="author" content="Tirth" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Toxicity Steering</h1>
+      <nav>
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link active" href="approach1.html">Approach 1</a>
+        <a class="nav-link" href="approach2.html">Approach 2</a>
+        <a class="nav-link" href="approach3.html">Approach 3</a>
+        <a href="https://example.com" class="cta" target="_blank" rel="noopener">Live demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="hero" class="hero">
+      <div class="hero-left">
+        <h2>Model steering via sparse autoencoders & directional latent steering</h2>
+        <p>We collected head-wise activations, trained per-head sparse autoencoders (SAEs), computed a toxicity direction in latent space, and steered V (attention value) during generation. This repo contains the pipeline, results, and an interactive demo (Gradio).</p>
+        <p class="meta">Model: <strong>microsoft/Phi-3.5-mini-instruct</strong> · Dataset: <strong>RTP-LX (English/Hindi)</strong> · GPU: <strong>L40S</strong></p>
+        <p class="repo">Repo: <a href="https://github.com/Tirth-021/NLP-Assignment-2" target="_blank" rel="noopener">github.com/Tirth-021/NLP-Assignment-2</a></p>
+      </div>
+      <div class="hero-right">
+        <section id="pipeline" class="section">
+          <h2>Pipeline</h2>
+
+          <div class="pipeline-row">
+            <div class="pipeline-step" data-step="1" data-info="We record per-head Value (V) activations from selected layers when model processes safe and harmful text.">Collect Activations</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="2" data-info="We train a Sparse Autoencoder per head to compress activations into a lower-dimensional, interpretable latent space.">Train SAE</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="3" data-info="We compute mean latent activation for safe vs harmful samples. Their difference defines the direction of toxicity.">Compute Direction</div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step" data-step="4" data-info="During inference, we subtract α × direction in latent space to reduce harmful drift.">Steer During Inference</div>
+          </div>
+
+          <p class="pipeline-caption">
+            The mean latent direction between harmful and safe activations is learned and subtracted during inference.
+          </p>
+        </section>
+      </div>
+      <div id="pipeline-tooltip"></div>
+    </section>
+
+    <section id="results" class="section">
+      <h2>Key Results</h2>
+      <p>Summary: SAE steering (d_latent=8, α=1.2) achieved ~30% overall reduction in average toxicity vs base model. Results below show per-method and per-language breakdowns.</p>
+
+      <div class="grid two-up">
+        <div class="card">
+          <h3>SAE Results</h3>
+          <div class="image-container">
+            <img src="./assets/images/sae_results.png" alt="SAE Results">
+          </div>
+          <p class="caption">Figure 1: Overall toxicity and per-language reduction (replace with your image).</p>
+        </div>
+
+        <div class="card">
+          <h3>Neuron Tuning Results</h3>
+
+          <div class="image-container">
+            <img src="./assets/images/neuron_tuning_results.png" alt="Neuron Tuning Results">
+          </div>
+          <p class="caption">Figure 2: Attention / MLP / Down-proj comparative results.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Numbers (selected)</h3>
+        <table class="table">
+          <thead><tr><th>Method</th><th>Base tox</th><th>Mitigated tox</th><th>Reduction</th><th>%</th></tr></thead>
+          <tbody>
+            <tr><td>SAE (d_latent=16, α=0.8)</td><td>0.1726</td><td>0.1617</td><td>0.0109</td><td>6.3%</td></tr>
+            <tr><td>SAE (d_latent=8, α=1.2)</td><td>0.1826</td><td>0.1276</td><td>0.0550</td><td>30.1%</td></tr>
+            <tr><td>NeuronTune (Attentions)</td><td>0.1798</td><td>0.1468</td><td>0.0330</td><td>18.4%</td></tr>
+          </tbody>
+        </table>
+        <p class="small">Full CSV results available in the repo under <code>results/</code>.</p>
+      </div>
+    </section>
+
+    <section id="ablation" class="section">
+      <h2>Ablation & Methods</h2>
+      <p>We experimented with different modules to steer (attn qkv, attn o, MLP down_proj) and with different SAE latent sizes. Key observation: steering value vectors across multiple mid-to-late layers gave the best tradeoff between refusal (safety) and utility.</p>
+
+      <div class="card">
+        <h3>Selected Ablation Table</h3>
+        <table class="table">
+          <thead><tr><th>Method</th><th>Base</th><th>Mitigated</th><th>Reduction</th><th>High tox rate</th></tr></thead>
+          <tbody>
+            <tr><td>Attentions</td><td>0.1798</td><td>0.1468</td><td>0.0330</td><td>0.084</td></tr>
+            <tr><td>Attn+MLP</td><td>0.1806</td><td>0.1693</td><td>0.0112</td><td>0.087</td></tr>
+            <tr><td>MLPs</td><td>0.1770</td><td>0.1798</td><td>-0.0027</td><td>0.123</td></tr>
+            <tr><td>Down_Proj</td><td>0.1817</td><td>0.1749</td><td>0.0068</td><td>0.122</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="metrics" class="section">
+      <h2>Metrics & Tools</h2>
+      <p>Primary metric: <strong>Perspective API toxicity</strong> (used throughout). We also experimented with <strong>Detoxify</strong> as a secondary scoring library for additional signal (see metrics table below).</p>
+
+      <div class="card">
+        <h3>Metrics tried</h3>
+        <ul>
+          <li>Perspective API: overall toxicity, severe_toxicity, identity_attack, insult, profanity, threat</li>
+          <li>Detoxify: aggregated toxicity categories and model confidence (used as crosscheck)</li>
+          <li>High-toxicity rate (>0.5) and median toxicity per language</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="demo" class="section">
+      <h2>Demo & How to run</h2>
+      <p>Use the interactive Gradio demo for live generation. You can toggle <strong>α</strong> (steering strength) to compare Base vs Steered outputs side-by-side.</p>
+      <p><a class="cta big" href="https://huggingface.co/spaces/Tirth2109/toxicity-steering" target="_blank" rel="noopener">Open Gradio Demo</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© Toxicity Steering — Private project. Repo: <a href="https://github.com/Tirth-021/NLP-Assignment-2" target="_blank" rel="noopener">github.com/Tirth-021/NLP-Assignment-2</a></p>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
+
+

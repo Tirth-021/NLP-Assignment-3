@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const steps = document.querySelectorAll(".pipeline-step");
   const arrows = document.querySelectorAll(".pipeline-arrow");
+  const tooltip = document.getElementById("pipeline-tooltip");
+
+  if (steps.length === 0) {
+    return;
+  }
+
   let index = 0;
 
   function animatePipeline() {
@@ -17,14 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   animatePipeline();
   setInterval(animatePipeline, 1300);
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const steps = document.querySelectorAll(".pipeline-step");
-  const tooltip = document.getElementById("pipeline-tooltip");
+  if (!tooltip) {
+    return;
+  }
 
   steps.forEach(step => {
-    step.addEventListener("mouseenter", e => {
+    step.addEventListener("mouseenter", () => {
       const text = step.getAttribute("data-info");
       tooltip.textContent = text;
       tooltip.style.opacity = "1";

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Approach 3 — Ablation & Healing</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <h1>Toxicity Steering</h1>
+      <nav>
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="approach1.html">Approach 1</a>
+        <a class="nav-link" href="approach2.html">Approach 2</a>
+        <a class="nav-link active" href="approach3.html">Approach 3</a>
+        <a href="https://example.com" class="cta" target="_blank" rel="noopener">Live demo</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-left">
+        <h2>Approach 3 · Ablation & Healing with activation steering</h2>
+        <p>We isolate toxic neurons using mean-difference analysis, surgically ablate those activations, and then heal the model with multilingual QLoRA finetuning to preserve helpfulness.</p>
+        <p class="meta">Base: <strong>Llama-3.1 8B</strong> · Trainable params: <strong>41.9M (0.52%)</strong> · Targets: <strong>100 neurons/layer</strong></p>
+      </div>
+      <div class="hero-right">
+        <div class="card">
+          <h3>Motivation</h3>
+          <ul class="snapshot-list">
+            <li>LAPE discovery broke model; MD-based attribution remained stable.</li>
+            <li>Need interpretability: store head activations and inspect top neurons.</li>
+            <li>Healing phase restores multilingual helpfulness via Belebele + Alpaca + HH-RLHF.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Discovery → Ablation → Healing</h2>
+      <div class="pipeline-row tight">
+        <div class="pipeline-step" data-info="Collect activation differences across HASOC (EN/HI/MR) toxic vs safe prompts.">Mean-Diff Analysis</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step" data-info="Freeze base model and zero-out 100 high-signal neurons per layer.">Surgical Ablation</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step" data-info="Finetune with QLoRA on multilingual helpful datasets to regain utility.">Multilingual Healing</div>
+        <div class="pipeline-arrow">→</div>
+        <div class="pipeline-step" data-info="Re-run Perspective/Detoxify eval + qualitative probes.">Evaluation</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Results Snapshot</h2>
+      <div class="grid two-up">
+        <div class="card">
+          <h3>Perspective API (RTP-LX)</h3>
+          <table class="table">
+            <thead><tr><th>Metric</th><th>Base</th><th>Abl.+Heal</th><th>Δ</th></tr></thead>
+            <tbody>
+              <tr><td>Avg toxicity</td><td>0.181</td><td>0.138</td><td>-23.8%</td></tr>
+              <tr><td>High-tox rate (&gt;0.5)</td><td>0.118</td><td>0.086</td><td>-27.1%</td></tr>
+              <tr><td>English</td><td>0.176</td><td>0.132</td><td>-24.9%</td></tr>
+              <tr><td>Hindi</td><td>0.188</td><td>0.141</td><td>-25.0%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Resource Profile</h3>
+          <ul>
+            <li>QLoRA adapters: 4-bit base, bf16 gradients.</li>
+            <li>16 influential heads × 192 SAEs (latent 16–32).</li>
+            <li>Storage bottleneck solved by streaming activations (avoid 97 GB dumps).</li>
+            <li>Training runs: 23–24 hrs on single L40S.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Visuals & Tables</h2>
+      <div class="grid two-up">
+        <div class="card">
+          <h3>Safety Neuron Heatmap</h3>
+          <div class="image-container">
+            <img src="./assets/images/safety_neurons_heatmap.png" alt="Safety neuron heatmap placeholder">
+          </div>
+          <p class="caption">Placeholder: layer-wise neuron activation heatmap (Figures 4–5).</p>
+        </div>
+        <div class="card">
+          <h3>Approach Comparison</h3>
+          <table class="table">
+            <thead><tr><th>Variant</th><th>Base tox</th><th>Mitigated</th><th>%Δ</th></tr></thead>
+            <tbody>
+              <tr><td>Information Flow (heads)</td><td>0.180</td><td>0.147</td><td>-18.3%</td></tr>
+              <tr><td>Down-proj focus</td><td>0.182</td><td>0.175</td><td>-3.7%</td></tr>
+              <tr><td>Surgical Detox (ours)</td><td>0.181</td><td>0.138</td><td>-23.8%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Implementation Notes</h2>
+      <div class="card">
+        <ul>
+          <li><strong>Strict data separation:</strong> HASOC for discovery/training, RTP-LX held out for evaluation.</li>
+          <li><strong>SAE efficiency:</strong> Latent 16–32 with gradient accumulation to stay within VRAM budget.</li>
+          <li><strong>Agnostic vs Ablation:</strong> We benchmark both MD-derived and LAPE-derived sets; MD wins due to stability.</li>
+          <li><strong>Demo plan:</strong> Side-by-side completions (toxic prompt) showing base vs healed responses and Perspective score gap.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© Toxicity Steering — Private project.</p>
+    </div>
+  </footer>
+  <script src="app.js"></script>
+</body>
+</html>
+
+

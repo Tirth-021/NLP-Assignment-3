@@ -24,6 +24,20 @@ body{
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 28px}
 .site-header h1{margin:0;font-size:20px;letter-spacing:0.4px}
 nav a{color:var(--muted);margin-left:16px;text-decoration:none;font-size:14px}
+nav a.nav-link{
+  padding:8px 12px;
+  border-radius:8px;
+  transition:background 0.25s ease, color 0.25s ease;
+}
+nav a.nav-link.active{
+  background:rgba(94,129,255,0.22);
+  color:#fff;
+  box-shadow:0 0 12px rgba(94,129,255,0.35) inset;
+}
+nav a.nav-link:not(.active):hover{
+  background:rgba(148,163,184,0.18);
+  color:#fff;
+}
 nav a.cta{background:linear-gradient(90deg,var(--accent),var(--accent-2));padding:8px 12px;border-radius:8px;color:#041018}
 .hero{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:start;padding:28px 0}
 .hero-left h2{margin-top:0;margin-bottom:12px;font-size:22px}
@@ -162,5 +176,54 @@ svg text {
   border-color: #4ea4ff;
   background: #293547;
   color: #ffffff;
+}
+
+.pipeline-row.tight {
+  gap: 12px;
+}
+
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.cta.alt {
+  background: transparent;
+  border: 1px solid #2f3c52;
+  color: var(--text);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.approach-card ul {
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.snapshot-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.snapshot-list li {
+  margin-bottom: 10px;
+}
+
+.small.center {
+  text-align: center;
+}
+
+.muted {
+  color: var(--muted);
 }
 
