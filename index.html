@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Toxicity Steering — Project Overview</title>
+  <title>Toxicity Detection and Steering</title>
   <link rel="stylesheet" href="styles.css" />
   <meta name="author" content="Tirth" />
 </head>
@@ -12,12 +12,12 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <h1>Toxicity Steering</h1>
+      <h1>Detoxification</h1>
       <nav>
         <a class="nav-link active" href="index.html">Home</a>
-        <a class="nav-link" href="approach1.html">Approach 1</a>
-        <a class="nav-link" href="approach2.html">Approach 2</a>
-        <a class="nav-link" href="approach3.html">Approach 3</a>
+        <a class="nav-link" href="approach1.html">SAE Steering</a>
+        <a class="nav-link" href="approach2.html">MetaController</a>
+        <a class="nav-link" href="approach3.html">Ablation & Healing</a>
         <a href="https://example.com" class="cta" target="_blank" rel="noopener">Live demo</a>
       </nav>
     </div>
@@ -26,24 +26,21 @@
   <main class="container">
     <section class="hero home-hero">
       <div class="hero-left">
-        <h2>Cross-lingual toxicity steering across three complementary approaches</h2>
+        <h2>Cross-lingual toxicity detection and steering across three complementary approaches</h2>
         <p>We explore sparse autoencoder steering, a lightweight reinforcement-learned MetaController, and a surgical
-          ablation + healing pipeline to detoxify multilingual LLM responses under tight GPU constraints.</p>
+          ablation + healing pipeline to detect and steer toxicity in multilingual LLM responses under tight GPU
+          constraints.</p>
         <p class="meta">Model family: <strong>Phi-3.5 & Llama-3.1</strong> · Datasets: <strong>RTP-LX, HASOC, HH-RLHF,
             Belebele</strong></p>
-        <!-- <div class="hero-buttons">
-          <a class="cta big" href="approach1.html">SAE Steering</a>
-          <a class="cta big alt" href="approach2.html">MetaController RL</a>
-          <a class="cta big alt" href="approach3.html">Ablation & Healing</a>
-        </div> -->
       </div>
       <div class="hero-right">
         <div class="card">
           <h3>Project Snapshot</h3>
           <ul class="snapshot-list">
-            <li><strong>Goal:</strong> Reduce toxicity by 25–40% without hurting helpfulness.</li>
+            <li><strong>Goal:</strong> Detect and reduce toxicity by 25–40% without hurting helpfulness.</li>
             <li><strong>Scope:</strong> 3 approaches, 9 multilingual datasets, 1 L40S GPU.</li>
-            <li><strong>Pipeline:</strong> Activation mining → Steering policy → Evaluation via Perspective API.</li>
+            <li><strong>Pipeline:</strong> Activation mining → Detection policy → Steering policy → Evaluation via
+              Perspective API.</li>
           </ul>
         </div>
       </div>
@@ -53,7 +50,7 @@
       <h2>Choose an Approach</h2>
       <div class="grid cards-grid">
         <article class="card approach-card">
-          <h3>Approach 1 · SAE Steering</h3>
+          <h3>SAE Steering</h3>
           <p>Train per-head sparse autoencoders on value activations, find harmful directions, and steer during
             inference to lower toxicity scores.</p>
           <ul>
@@ -65,7 +62,7 @@
         </article>
 
         <article class="card approach-card">
-          <h3>Approach 2 · MetaController</h3>
+          <h3>MetaController</h3>
           <p>Reinforcement-learned gating controller that dynamically scales transformer layers using antithetic
             sampling and Perspective API rewards.</p>
           <ul>
@@ -77,7 +74,7 @@
         </article>
 
         <article class="card approach-card">
-          <h3>Approach 3 · Ablation & Healing</h3>
+          <h3>Ablation & Healing</h3>
           <p>Identify toxic neurons through mean-difference analysis, ablate them, and heal performance using
             multilingual QLoRA finetuning.</p>
           <ul>
