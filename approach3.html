@@ -4,21 +4,63 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Ablation & Healing</title>
+  <title>Detailed Experimental Results</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Page-specific styles for data highlighting */
+    .method-section {
+      margin-bottom: 4rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    /* Result coloring */
+    .positive-result {
+      color: var(--accent); /* Uses your CSS variable for consistency */
+      font-weight: 700;
+    }
+
+    .negative-result {
+      color: #ef4444; /* Red for bad results */
+      font-weight: 700;
+    }
+
+    .gibberish-result {
+      color: var(--muted);
+      font-style: italic;
+      font-size: 0.9em;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* Spacer for stacked images */
+    .img-spacer {
+      margin-bottom: 20px;
+    }
+
+    /* Sub-headers in tables */
+    .sub-header td {
+      background: rgba(255, 255, 255, 0.02);
+      color: #fff;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+  </style>
 </head>
 
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <h1>Detoxification</h1>
+      <h1>Detoxification Results</h1>
       <nav>
         <a class="nav-link" href="index.html">Home</a>
         <a class="nav-link" href="approach1.html">SAE Steering</a>
         <a class="nav-link" href="approach2.html">MetaController</a>
-        <a class="nav-link active" href="approach3.html">Ablation & Healing</a>
-        <a href="https://nlp-assignment-3-pdb97usuu42vppb3rdz73k.streamlit.app/" class="cta" target="_blank"
-          rel="noopener">Live demo</a>
+        <a class="nav-link active" href="approach3.html">Results & Comparison</a>
+        <a href="https://nlp-assignment-3-pdb97usuu42vppb3rdz73k.streamlit.app/" class="cta" target="_blank" rel="noopener">Live demo</a>
       </nav>
     </div>
   </header>
@@ -26,155 +68,185 @@
   <main class="container">
     <section class="hero">
       <div class="hero-left">
-        <h2>Ablation & Healing with activation steering</h2>
-        <p>We isolate toxic neurons using mean-difference analysis, surgically ablate those activations, and then heal
-          the model with multilingual QLoRA finetuning to preserve helpfulness.</p>
-        <p class="meta">Base: <strong>Llama-3.1 8B</strong> · Trainable params: <strong>41.9M (0.52%)</strong> ·
-          Targets: <strong>100 neurons/layer</strong></p>
-      </div>
-      <div class="hero-right">
-        <div class="card">
-          <h3>Motivation</h3>
-          <ul class="snapshot-list">
-            <li>LAPE discovery broke model; MD-based attribution remained stable.</li>
-            <li>Need interpretability: store head activations and inspect top neurons.</li>
-            <li>Healing phase restores multilingual helpfulness via Belebele + Alpaca + HH-RLHF.</li>
-          </ul>
-        </div>
+        <h2>Detailed Findings</h2>
+        <p>Comprehensive statistical analysis comparing <strong>Agnostic vs. Ablation</strong> finetuning pipelines and <strong>MD vs. LAPE</strong> activation steering methods across English, Hindi, French, and Spanish.</p>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Discovery → Ablation → Healing</h2>
-      <div class="pipeline-row tight">
-        <div class="pipeline-step"
-          data-info="Collect activation differences across HASOC (EN/HI/MR) toxic vs safe prompts.">Mean-Diff Analysis
-        </div>
-        <div class="pipeline-arrow">→</div>
-        <div class="pipeline-step" data-info="Freeze base model and zero-out 100 high-signal neurons per layer.">
-          Surgical Ablation</div>
-        <div class="pipeline-arrow">→</div>
-        <div class="pipeline-step" data-info="Finetune with QLoRA on multilingual helpful datasets to regain utility.">
-          Multilingual Healing</div>
-        <div class="pipeline-arrow">→</div>
-        <div class="pipeline-step" data-info="Re-run Perspective/Detoxify eval + qualitative probes.">Evaluation</div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Results Snapshot</h2>
+    <section class="section method-section">
+      <h2>1. Finetuning Pipeline Results</h2>
+      <p class="meta">Comparison of Agnostic-Only Finetuning (LAPE-derived) vs. Ablation & Healing (MD-derived).</p>
+      
       <div class="grid two-up">
-        <div class="card">
-          <h3>Perspective API (RTP-LX)</h3>
+        <div class="card" style="flex: 2;">
+          <h3>Statistical Breakdown</h3>
           <table class="table">
             <thead>
               <tr>
-                <th>Metric</th>
-                <th>Base</th>
-                <th>Abl.+Heal</th>
-                <th>Δ</th>
+                <th>Method</th>
+                <th>Language</th>
+                <th>Baseline</th>
+                <th>Finetuned</th>
+                <th>Reduction (%)</th>
               </tr>
             </thead>
             <tbody>
+              <tr class="sub-header"><td colspan="5">Agnostic Only (LAPE)</td></tr>
               <tr>
-                <td>Avg toxicity</td>
-                <td>0.181</td>
-                <td>0.138</td>
-                <td>-23.8%</td>
-              </tr>
-              <tr>
-                <td>High-tox rate (&gt;0.5)</td>
-                <td>0.118</td>
-                <td>0.086</td>
-                <td>-27.1%</td>
-              </tr>
-              <tr>
+                <td>Agnostic</td>
                 <td>English</td>
-                <td>0.176</td>
-                <td>0.132</td>
-                <td>-24.9%</td>
+                <td>0.3968</td>
+                <td>0.6310</td>
+                <td class="negative-result">-59.02% (Worse)</td>
               </tr>
               <tr>
+                <td>Agnostic</td>
                 <td>Hindi</td>
-                <td>0.188</td>
-                <td>0.141</td>
-                <td>-25.0%</td>
+                <td>0.3651</td>
+                <td>0.2832</td>
+                <td class="positive-result">22.43%</td>
+              </tr>
+              <tr>
+                <td>Agnostic</td>
+                <td><strong>Mixed</strong></td>
+                <td>0.3809</td>
+                <td>0.4571</td>
+                <td class="negative-result">-19.98%</td>
+              </tr>
+
+              <tr class="sub-header"><td colspan="5">Ablation & Healing (MD) - Recommended</td></tr>
+              <tr>
+                <td>Ablation</td>
+                <td>English</td>
+                <td>0.4247</td>
+                <td>0.4164</td>
+                <td class="positive-result">1.93%</td>
+              </tr>
+              <tr>
+                <td>Ablation</td>
+                <td>Hindi</td>
+                <td>0.3957</td>
+                <td>0.2787</td>
+                <td class="positive-result">29.59%</td>
+              </tr>
+              <tr>
+                <td>Ablation</td>
+                <td><strong>Mixed</strong></td>
+                <td>0.4102</td>
+                <td>0.3475</td>
+                <td class="positive-result">15.28%</td>
               </tr>
             </tbody>
           </table>
         </div>
-        <div class="card">
-          <h3>Resource Profile</h3>
-          <ul>
-            <li>QLoRA adapters: 4-bit base, bf16 gradients.</li>
-            <li>16 influential heads × 192 SAEs (latent 16–32).</li>
-            <li>Storage bottleneck solved by streaming activations (avoid 97 GB dumps).</li>
-            <li>Training runs: 23–24 hrs on single L40S.</li>
-          </ul>
+        
+        <div class="card" style="flex: 1;">
+          <h3>Visual Analysis</h3>
+          <p class="small"><strong>Contrast in Stability:</strong> Agnostic training (red bars, bottom) causes catastrophic forgetting in English. Ablation (top) maintains stability.</p>
+          
+          <div class="image-container img-spacer">
+             <img src="./assets/images/sub3.1.png.jpeg" alt="Ablation Performance Chart">
+             <div class="caption">Fig 1: Ablation & Healing (Stable)</div>
+          </div>
+
+          <div class="image-container">
+            <img src="./assets/images/sub3.2.png.jpeg" alt="Agnostic Finetuning Chart">
+            <div class="caption">Fig 2: Agnostic Finetuning (Unstable)</div>
+         </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Visuals & Tables</h2>
+    <section class="section method-section">
+      <h2>2. Activation Steering Results</h2>
+      <p class="meta">Cross-lingual evaluation of Mean-Difference (MD) steering vs. LAPE steering.</p>
+      
       <div class="grid two-up">
-        <div class="card">
-          <h3>Safety Neuron Heatmap</h3>
-          <div class="image-container">
-            <img src="./assets/images/safety_neurons_heatmap.png" alt="Safety neuron heatmap placeholder">
-          </div>
-          <p class="caption">Placeholder: layer-wise neuron activation heatmap (Figures 4–5).</p>
-        </div>
-        <div class="card">
-          <h3>Approach Comparison</h3>
-          <table class="table">
+        <div class="card" style="flex: 2;">
+            <h3>MD vs. LAPE Performance</h3>
+            <table class="table">
             <thead>
-              <tr>
-                <th>Variant</th>
-                <th>Base tox</th>
-                <th>Mitigated</th>
-                <th>%Δ</th>
-              </tr>
+                <tr>
+                <th>Train Lang</th>
+                <th>Test Lang</th>
+                <th>Reduction (MD)</th>
+                <th>Reduction (LAPE)</th>
+                </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Information Flow (heads)</td>
-                <td>0.180</td>
-                <td>0.147</td>
-                <td>-18.3%</td>
-              </tr>
-              <tr>
-                <td>Down-proj focus</td>
-                <td>0.182</td>
-                <td>0.175</td>
-                <td>-3.7%</td>
-              </tr>
-              <tr>
-                <td>Surgical Detox (ours)</td>
-                <td>0.181</td>
-                <td>0.138</td>
-                <td>-23.8%</td>
-              </tr>
+                <tr class="sub-header"><td colspan="4">Vectors Trained on English</td></tr>
+                <tr>
+                <td>English</td>
+                <td>English</td>
+                <td class="positive-result">4.95%</td>
+                <td class="gibberish-result">99.9% (Gibberish)</td>
+                </tr>
+                <tr>
+                <td>English</td>
+                <td>Hindi</td>
+                <td class="positive-result">8.61%</td>
+                <td class="gibberish-result">99.7% (Gibberish)</td>
+                </tr>
+                <tr>
+                <td>English</td>
+                <td>French</td>
+                <td class="positive-result">18.82%</td>
+                <td class="gibberish-result">94.3% (Gibberish)</td>
+                </tr>
+                <tr>
+                <td>English</td>
+                <td>Spanish</td>
+                <td class="negative-result">-1.17%</td>
+                <td class="gibberish-result">98.6% (Gibberish)</td>
+                </tr>
+
+                <tr class="sub-header"><td colspan="4">Vectors Trained on Hindi</td></tr>
+                <tr>
+                <td>Hindi</td>
+                <td>English</td>
+                <td class="positive-result">10.19%</td>
+                <td class="gibberish-result">79.5% (Gibberish)</td>
+                </tr>
+                <tr>
+                <td>Hindi</td>
+                <td>Hindi</td>
+                <td class="positive-result">36.17%</td>
+                <td class="gibberish-result">77.1% (Gibberish)</td>
+                </tr>
+                <tr>
+                <td>Hindi</td>
+                <td>French</td>
+                <td class="positive-result">27.30%</td>
+                <td class="gibberish-result">71.7% (Gibberish)</td>
+                </tr>
+                <tr>
+                <td>Hindi</td>
+                <td>Spanish</td>
+                <td class="negative-result">-30.34%</td>
+                <td class="gibberish-result">66.5% (Gibberish)</td>
+                </tr>
             </tbody>
-          </table>
+            </table>
+        </div>
+
+        <div class="card" style="flex: 1;">
+            <h3>Steering Insights</h3>
+            <p class="small"><strong>MD-Steering</strong> retains semantic coherence. <strong>Hindi vectors</strong> showed surprising cross-lingual efficacy on English and French.</p>
+            
+            <div class="image-container">
+                <img src="./assets/images/sub3.3.png.jpeg" alt="Activation Steering Chart">
+                <div class="caption">Fig 3: Activation Steering Results</div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px;">
+                <p class="small" style="margin:0; color: var(--muted);">
+                    <strong>Note on LAPE:</strong> While LAPE shows ~100% reduction scores, it degenerates output into nonsensical tokens (Gibberish), making it unusable for steering.
+                </p>
+            </div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <h2>Implementation Notes</h2>
-      <div class="card">
-        <ul>
-          <li><strong>Strict data separation:</strong> HASOC for discovery/training, RTP-LX held out for evaluation.
-          </li>
-          <li><strong>SAE efficiency:</strong> Latent 16–32 with gradient accumulation to stay within VRAM budget.</li>
-          <li><strong>Agnostic vs Ablation:</strong> We benchmark both MD-derived and LAPE-derived sets; MD wins due to
-            stability.</li>
-          <li><strong>Demo plan:</strong> Side-by-side completions (toxic prompt) showing base vs healed responses and
-            Perspective score gap.</li>
-        </ul>
-      </div>
-    </section>
   </main>
 
   <footer class="site-footer">
