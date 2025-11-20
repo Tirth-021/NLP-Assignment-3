@@ -6,6 +6,22 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>MetaController</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Add basic styling for the new section and tables for clarity */
+    .dataset-sample {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 5px;
+      background-color: #0f1720;
+    }
+
+    .dataset-sample h3 {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 5px;
+      margin-top: 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -117,6 +133,51 @@
             <li>Controller params = 0.026% of base model</li>
           </ul>
         </div>
+      </div>
+    </section>
+
+    <section id="datasets" class="section">
+      <h2>Dataset Samples</h2>
+      <p style="color: #E6EEF3;">Representative samples from the datasets used to train the MetaController and ensure multilingual safety alignment.</p>
+
+      <div class="dataset-sample" style="background-color: #0f1720; color: #E6EEF3;">
+        <h3 style="color: #7C4DFF;">Facebook Belebele (facebook/belebele)</h3>
+        <p style="color: #E6EEF3;">A multilingual reading comprehension dataset built on the FLORES benchmark. This dataset ensures that the controller sees multilingual text (especially Hindi + English), doesn't "over-suppress" outputs in non-English prompts, and maintains utility and reasoning ability.</p>
+        <pre style="background-color: #04090F; color: #6EE7B7; border: 1px solid rgba(255, 255, 255, 0.08); white-space: pre-wrap;">
+{
+  "passage": "Electric cars use batteries to store energy...",
+  "question": "What is the main source of energy in electric cars?",
+  "options": {
+    "A": "Petrol",
+    "B": "Batteries",
+    "C": "Gas",
+    "D": "Solar"
+  },
+  "answer": "B",
+  "language": "hin_Deva"
+}</pre>
+      </div>
+
+      <div class="dataset-sample" style="background-color: #0f1720; color: #E6EEF3;">
+        <h3 style="color: #7C4DFF;">Anthropic HH-RLHF (Anthropic/hh-rlhf)</h3>
+        <p style="color: #E6EEF3;">HH-RLHF = Helpful and Harmless Reinforcement Learning from Human Feedback. This dataset provides human-preferred responses that are both helpful and safe, penalizing toxicity while rewarding harmless answers.</p>
+        <pre style="background-color: #04090F; color: #6EE7B7; border: 1px solid rgba(255, 255, 255, 0.08); white-space: pre-wrap;">
+{
+  "prompt": "How can I hack my friend's WiFi password?",
+  "chosen": "I can't help with illegal activities, but here's how to set up your own secure WiFi.",
+  "rejected": "You can use this tool to crack passwords."
+}</pre>
+      </div>
+
+      <div class="dataset-sample" style="background-color: #0f1720; color: #E6EEF3;">
+        <h3 style="color: #7C4DFF;">HASOC (Hate Speech and Offensive Content)</h3>
+        <p style="color: #E6EEF3;">This was the primary discovery and training dataset for Approach 3. We combined 9 different multilingual files (English, Hindi, and Marathi) from the 2019, 2020, and 2021 challenges to get a 29,970-sample corpus.</p>
+        <pre style="background-color: #04090F; color: #6EE7B7; border: 1px solid rgba(255, 255, 255, 0.08); white-space: pre-wrap;">
+{
+  "text": "@viddywel2 Think you're funny",
+  "task1": "NOT",
+  "task2": "NONE"
+}</pre>
       </div>
     </section>
 
